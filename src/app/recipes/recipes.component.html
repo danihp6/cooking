@@ -1,10 +1,15 @@
-<div class="container">
-    <div class="row">
-        <div clss="col-md-5">
-            <app-recipe-list></app-recipe-list>
-        </div>
-        <div clss="col-md-7">
-            <app-recipe-details></app-recipe-details>
-        </div>
+<div class="row">
+    <div clss="col-md-5">
+        <app-recipe-list (recipeWasSelected)="selectedRecipe = $event"></app-recipe-list>
+    </div>
+    <div clss="col-md-7">
+        <app-recipe-details 
+        *ngIf="selectedRecipe; else noRecipe"
+        [recipe] = "selectedRecipe"
+        >
+    </app-recipe-details>
+        <ng-template #noRecipe>
+            <p>Please select a Recipe!</p>
+        </ng-template>
     </div>
 </div>
