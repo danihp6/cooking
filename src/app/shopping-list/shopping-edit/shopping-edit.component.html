@@ -1,6 +1,9 @@
 <div class="row">
     <div class="col-xs-12">
-        <form>
+        <form 
+            (ngSubmit)="onSubmit()"
+            #f="ngForm"
+        >
             <div class="row">
                 <div class="col-sm-5 form-group">
                     <label for="name">Name</label>
@@ -8,28 +11,46 @@
                         type="text" 
                         id="name" 
                         class="form-control"
-                        #nameInput
+                        ngModel
+                        name="name"
+                        #email="ngModel"
+                        required
                     >
+                    <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a name!</span>
                 </div>
                 <div class="col-sm-2 form-group">
-                    <label for="amount"></label>
+                    <label for="amount">Amount</label>
                     <input 
                         type="number" 
                         id="amount" 
                         class="form-control"
-                        #amountInput
+                        ngModel
+                        #amount="ngModel"
+                        name="amount"
+                        required
+                        pattern="^[1-9]+[0-9]*$"
                     >
+                    <span class="help-block" *ngIf="!amount.valid && amount.touched">Please enter a correct amount!</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <button 
                         class="btn btn-success" 
+                        type="submit"
+                        [disabled]="!f.valid"
+                    >{{ selectedIngredient > -1?"Edit":"Add" }}</button>
+                    <button 
+                        class="btn btn-danger" 
                         type="button"
-                        (click)="onAddItem()"
-                    >Add</button>
-                    <button class="btn btn-danger" type="button">Delete</button>
-                    <button class="btn btn-primary" type="button">Clear</button>
+                        (click)="onDelete()"
+                        *ngIf="selectedIngredient > -1"
+                    >Delete</button>
+                    <button 
+                        class="btn btn-primary" 
+                        type="button"
+                        (click)="onClear()"
+                    >Clear</button>
                 </div>
             </div>
         </form>
