@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
@@ -11,15 +10,18 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit,OnDestroy {
   recipes: Recipe[] = [];
   recipesSub:Subscription;
+  isLoading = false;
 
-  constructor(private recipeService: RecipeService,private router:Router) { }
+  constructor(private recipeService: RecipeService) { }
 
   ngOnInit(): void {
-    this.recipesSub = this.recipeService.recipesChanged.subscribe(
-      (recipes)=>
-      this.recipes = recipes
+    this.isLoading = true;
+    this.recipeService.getRecipes().subscribe(
+      (recipes)=> {
+        this.recipes = recipes
+        this.isLoading = false;
+      }
     );
-    this.recipes = this.recipeService.getRecipes();
   }
 
   ngOnDestroy(){

@@ -24,19 +24,24 @@ export class RecipeEditComponent implements OnInit {
       (params:Params)=>{
         this.editMode = params['id'] != null;
         this.id = params['id'];
-        this.initForm();
+        this.recipeService.getRecipe(params['id']).subscribe(
+          (recipe)=>{
+            console.log(recipe);
+            this.initForm(recipe)
+          }
+        );
+        
       }
     );
   }
 
-  initForm(){
+  initForm(recipe:Recipe){
     let name = '';
     let image = '';
     let description = '';
     let ingredients:Ingredient[] = [];
 
     if(this.editMode){
-      let recipe = this.recipeService.getRecipe(this.id);
       
       name = recipe.name;
       image = recipe.image;
@@ -68,19 +73,16 @@ export class RecipeEditComponent implements OnInit {
     return (<FormArray>this.form.get('ingredients')).controls;
   }
 
-  onSubmit(){
-    console.log('submit');
+  async onSubmit(){
     const recipe:Recipe = this.form.value;
     
     if(this.editMode){
-      recipe.id = this.id;
       this.recipeService.updateRecipe(this.id,recipe);
       this.router.navigate(['../'],{relativeTo:this.route});
     }
      else {
-      recipe.id = this.recipeService.generateId();
-      this.recipeService.addRecipe(recipe);
-      this.router.navigate(['/recipes',recipe.id]);
+      const id = await this.recipeService.addRecipe(recipe);
+      this.router.navigate(['/recipes',id]);
      }
     
   }

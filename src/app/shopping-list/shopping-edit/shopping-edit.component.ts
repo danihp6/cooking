@@ -18,7 +18,6 @@ export class ShoppingEditComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.selectedIngredientSub = this.shoppingListService.ingredientSelected.subscribe(
       (index)=>{
-        console.log(index);
         this.selectedIngredient = index;
         let ingredient = this.shoppingListService.getIngredient(index);
         this.form.setValue({
@@ -34,7 +33,6 @@ export class ShoppingEditComponent implements OnInit,OnDestroy {
   }
 
   onSubmit(){
-    console.log(this.form);
     if(this.form.valid){
       let ingredient = new Ingredient(this.form.value.name,this.form.value.amount);
       if(this.selectedIngredient > -1){
